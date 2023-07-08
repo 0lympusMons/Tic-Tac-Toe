@@ -1,11 +1,22 @@
+const Player = (mark) => {
+    this.mark = mark;
+
+    const getMark = () => {
+        return mark;
+    };
+
+    return { getMark }
+};
+
 const gameBoard = (() => {
 
     let gameBoardArr = [['', '', ''], ['', '', ''], ['', '', '']];
 
     const setGameBoard = (x, y, mark) => {
-        if (gameBoardArr[x][y] == '') {
+        if (gameBoardArr[x][y] == '' && !(gameController.isOver)) {
             gameBoardArr[x][y] = mark;
         }
+        gameController.checkWin();
     };
     const getGameBoard = () => gameBoardArr;
     const resetGameBoard = () => gameBoardArr = [['', '', ''], ['', '', ''], ['', '', '']];
@@ -19,139 +30,204 @@ const gameBoard = (() => {
 
 const displayController = (() => {
 
+    let playerMark;
+    let x,y;
 
+    const addMark = (e) => {
 
-})();
-
-const gameController = (() => {
-
-    let gameBoardArr = gameBoard.getGameBoard();
-    let numberOfTurns = 0;
-
-    const checkWin = () => {
-
-        //checks for row
-        let successiveCounter = 0;
-        let successiveCounterSign;
-
-
-        //check rows for win situations
-        for (row = 0; row <= 2; row++) {
-            successiveCounterSign = gameBoardArr[row][0];
-
-            for (col = 0; col <= 2; col++) {
-                if (successiveCounterSign == gameBoardArr[row][col] && gameBoardArr[row][col] != '') {
-                    numberOfTurns++;
-                    successiveCounter++;
-                } else {
-
-                    if(gameBoardArr[row][col] != ''){
-                        numberOfTurns++;
-                    }
-
-                    successiveCounter = 0;
-                    continue;
-                }
-            }
+        if(e.target.innerText == ''){
+            gameController.alternatePlayerTurns();
         }
 
-        //check columns for win situations
-        for (col = 0; col <= 2; col++) {
-            successiveCounterSign = gameBoardArr[0][col];
+        e.target.style.border = "red 1px solid";
 
-            for (row = 0; row <= 2; row++) {
-                if (successiveCounterSign == gameBoardArr[row][col] && gameBoardArr[row][col] != '') {
-                    successiveCounter++;
-                } else {
-                    successiveCounter = 0;
-                    continue;
-                }
-            }
-        }
+        x = parseInt(e.target.dataset.x); 
+        y = parseInt(e.target.dataset.y);
+        gameBoard.setGameBoard(x, y, playerMark);
 
-        //check diagonals for win situation
-        if (gameBoardArr[0][0] == gameBoardArr[1][1] && gameBoardArr[0][0] == gameBoardArr[2][2]) {
-            successiveCounter = 3;
-        } else if (gameBoardArr[0][2] == gameBoardArr[1][1] && gameBoardArr[0][2] == gameBoardArr[2][0]) {
-            successiveCounter = 3;
-        }
+        e.target.innerHTML = (gameBoard.getGameBoard())[x][y];
 
+
+    };
+
+    const gridItems = document.querySelectorAll(".tictactoe__grid--item");
+    gridItems.forEach(gridItem => gridItem.addEventListener('click', addMark));
+
+    const setMark = (mark) => playerMark = mark;
+
+
+    return { setMark }
+    })();
+
+
+    const gameController = (() => {
+
+        let gameBoardArr = gameBoard.getGameBoard();
+        let numberOfTurns = 0;
         let playerWinner;
-        //check who won
-        if (successiveCounter == 3) {
-            alternatePlayerTurns();
-            if (playerOne.myTurn == true) {
-                playerWinner = "Player One";
-            } else {
-                playerWinner = "Player Two";
+        let isOver = (playerWinner == undefined)? false : true;
+
+        const playerOne = Player('X');
+        const playerTwo = Player('O');
+        playerOne.myTurn = true;
+        //checks the winner of the game
+    
+        const checkWin = () => {
+
+            numberOfTurns++;
+
+            //checks for row
+            let successiveCounter = 0;
+            let successiveCounterSign;
+
+            //check who won
+            const winnerChecker = () => {
+
+                alternatePlayerTurns();
+                if (playerOne.myTurn == true) {
+                    playerWinner = "Player One";
+
+                } else {
+                    playerWinner = "Player Two";
+
+                }
+                console.log(playerWinner + "wins!");
+
+            };
+
+
+            //check rows for win situations
+            for (row = 0; row <= 2; row++) {
+                successiveCounterSign = gameBoardArr[row][0];
+
+                for (col = 0; col <= 2; col++) {
+                    if (successiveCounterSign == gameBoardArr[row][col] && gameBoardArr[row][col] != '') {
+                        successiveCounter++;
+
+                        if (successiveCounter == 3) {
+                            winnerChecker();
+                        } else if (numberOfTurns == 9) {
+                            console.log("It's a tie!")
+                        }
+                    } else {
+
+                        if (gameBoardArr[row][col] != '') {
+                        }
+
+                        successiveCounter = 0;
+                        continue;
+                    }
+                }
             }
-            console.log(playerWinner + "wins!");
-        } else if(numberOfTurns == 9) {
-            console.log(' It\'s a tie!');
+
+            //check columns for win situations
+            for (col = 0; col <= 2; col++) {
+                successiveCounterSign = gameBoardArr[0][col];
+
+                for (row = 0; row <= 2; row++) {
+                    if (successiveCounterSign == gameBoardArr[row][col] && gameBoardArr[row][col] != '') {
+                        successiveCounter++;
+
+                        if (successiveCounter == 3) {
+                            winnerChecker();
+                        } else if (numberOfTurns == 9) {
+                            console.log("It's a tie!")
+                        }
+                    } else {
+                        successiveCounter = 0;
+                        continue;
+                    }
+                }
+            }
+
+            //check diagonals for win situation
+            if (gameBoardArr[0][0] == gameBoardArr[1][1] && gameBoardArr[0][0] == gameBoardArr[2][2] && gameBoardArr[0][0] != '') {
+                successiveCounter = 3;
+                winnerChecker();
+            } else if (gameBoardArr[0][2] == gameBoardArr[1][1] && gameBoardArr[0][2] == gameBoardArr[2][0] && gameBoardArr[0][2] != '') {
+                successiveCounter = 3;
+                winnerChecker();
+
+            }
+
+
+
+
+        };
+
+
+        //alternate player turns
+
+        function alternatePlayerTurns() {
+            if (playerOne.myTurn == true) {
+                console.log("Player 2");
+                playerOne.myTurn = false;
+                playerTwo.myTurn = true;
+
+                displayController.setMark(playerOne.getMark());
+                return playerOne.getMark();
+            } else {
+                console.log("Player 1");
+                playerOne.myTurn = true;
+                playerTwo.myTurn = false;
+
+                displayController.setMark(playerTwo.getMark());
+                return playerTwo.getMark();
+            }
+
+        };
+
+        //play game
+
+        const beginGame = () => {
+            console.log("let the game begin!");
+
+            for (i = 1; i <= 9; i++) {
+
+                if (playerWinner == undefined) {
+                    // let xPos = prompt("x position:");
+                    // let yPos = prompt("y position:");
+                    // gameBoard.setGameBoard(xPos, yPos, alternatePlayerTurns());
+                    // let mark = alternatePlayerTurns();
+                    displayController.setMark(mark);
+                    gameBoard.displayGameBoardConsole();
+
+                    checkWin();
+                } else {
+                    break;
+                };
+
+
+
+            }
+
         }
 
+        return { checkWin, beginGame, alternatePlayerTurns, isOver };
 
-    };
+    })();
 
-    const playerOne = {
-        mark: "X",
-        myTurn: true,
-        score: 0
-    }
+    // gameBoard.setGameBoard(0, 0, "O");
+    // gameBoard.setGameBoard(0, 1, "O");
+    // gameBoard.setGameBoard(0, 2, "X");
+    // gameBoard.setGameBoard(1, 0, "O");
+    // gameBoard.setGameBoard(1, 1, "X");
+    // gameBoard.setGameBoard(1, 2, "O");
+    // gameBoard.setGameBoard(2, 0, "O");
+    // gameBoard.setGameBoard(2, 1, "O");
+    // gameBoard.setGameBoard(2, 2, "X");
 
-    const playerTwo = {
-        mark: "O",
-        myTurn: false,
-        score: 0
 
-    }
 
-    function alternatePlayerTurns() {
-        if (playerOne.myTurn == true) {
-            console.log("Player 2");
-            playerOne.myTurn = false;
-            playerTwo.myTurn = true;
+    // gameController.begin();
 
-            return playerOne.mark;
-        } else {
-            console.log("Player 1");
-            playerOne.myTurn = true;
-            playerTwo.myTurn = false;
+    // gameBoard.setGameBoard(0, 0, "X");
+    // gameBoard.setGameBoard(0, 1, "X");
+    // gameBoard.setGameBoard(0, 2, "X");
 
-            return playerTwo.mark;
-        }
+    // gameBoard.displayGameBoardConsole();
 
-    };
+    // gameController.checkWin();
 
-    const begin = () => {
-        console.log("let the game begin!");
-
-        for (i = 1; i <= 9; i++) {
-            let xPos = prompt("x position:");
-            let yPos = prompt("y position:");
-            gameBoard.setGameBoard(xPos, yPos, alternatePlayerTurns());
-        }
-
-    }
-
-    return { checkWin, begin };
-
-})();
-
-// gameBoard.setGameBoard(0, 0, "O");
-// gameBoard.setGameBoard(0, 1, "O");
-// gameBoard.setGameBoard(0, 2, "X");
-// gameBoard.setGameBoard(1, 0, "B");
-// gameBoard.setGameBoard(1, 1, "X");
-// gameBoard.setGameBoard(1, 2, "O");
-// gameBoard.setGameBoard(2, 0, "O");
-// gameBoard.setGameBoard(2, 1, "O");
-// gameBoard.setGameBoard(2, 2, "X");
-
-gameController.begin();
-gameBoard.displayGameBoardConsole();
-
-gameController.checkWin();
-
-// gameController.begin();
+    // gameController.beginGame();
 
