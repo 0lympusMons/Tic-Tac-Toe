@@ -38,7 +38,7 @@ const gameController = (() => {
     let numberOfTurns = 0;
     let playerWinner;
     let isOver = {
-        isTie: numberOfTurns != 9,
+        isTie: (numberOfTurns == 9 && playerWinner == undefined),
         gameOver: (playerWinner != undefined || numberOfTurns != 9)? false:true,
         playerWinner: playerWinner
     };
@@ -68,10 +68,12 @@ const gameController = (() => {
             alternatePlayerTurns();
             if (playerOne.myTurn == true) {
                 playerWinner = "Player One";
+                isOver.playerWinner = playerWinner;
                 isOver.gameOver = true;
 
             } else {
                 playerWinner = "Player Two";
+                isOver.playerWinner = playerWinner;
                 isOver.gameOver = true;
 
             }
@@ -94,6 +96,7 @@ const gameController = (() => {
                     } else if (numberOfTurns == 9) {
                         console.log("It's a tie!")
                         isOver.gameOver = true;
+                        isOver.isTie = true;
 
                     }
                 } else {
@@ -122,6 +125,8 @@ const gameController = (() => {
                         winnerChecker();
                     } else if (numberOfTurns == 9) {
                         console.log("It's a tie!")
+                        isOver.gameOver = true;
+                        isOver.isTie = true;
                     }
                 } else {
                     successiveCounter = 0;
@@ -241,6 +246,7 @@ const displayController = (() => {
     const gridItems = document.querySelectorAll(".tictactoe__grid--item");
     gridItems.forEach(gridItem => gridItem.addEventListener('click', addMark));
 
+    //set mark
     const setMark = (mark) => playerMark = mark;
 
     //remove event listener if winner exists
@@ -249,14 +255,22 @@ const displayController = (() => {
         gridItems.forEach(gridItem => gridItem.removeEventListener('click', addMark));
     };
 
+    //display winner to html
     function announceWinner(){
         let tictactoeWrapper = document.querySelector(".tictactoe__wrapper");
         let winnerText = document.createElement("h2");
-        winnerText.innerText = "sesen way ligo";
+
+        if(isOver.isTie){
+            resultString = "It's a tie!"
+        }else{
+            resultString = isOver.playerWinner + " wins!"
+        }
+
+        winnerText.innerText = resultString;
         tictactoeWrapper.parentNode.insertBefore(winnerText, tictactoeWrapper)
     }
 
-    //let resetBu
+    // let resetButton = 
 
     return { setMark }
 
