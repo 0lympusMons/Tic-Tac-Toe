@@ -174,31 +174,8 @@ const gameController = (() => {
 
     //play game
 
-    const beginGame = () => {
-        console.log("let the game begin!");
 
-        for (i = 1; i <= 9; i++) {
-
-            if (playerWinner == undefined) {
-                // let xPos = prompt("x position:");
-                // let yPos = prompt("y position:");
-                // gameBoard.setGameBoard(xPos, yPos, alternatePlayerTurns());
-                // let mark = alternatePlayerTurns();
-                displayController.setMark(mark);
-                gameBoard.displayGameBoardConsole();
-
-                checkWin();
-            } else {
-                break;
-            };
-
-
-
-        }
-
-    }
-
-    return { checkWin, beginGame, alternatePlayerTurns, getResult };
+    return { checkWin, alternatePlayerTurns, getResult };
 
 })();
 
