@@ -1,3 +1,5 @@
+
+
 const Player = (mark) => {
     this.mark = mark;
 
@@ -8,12 +10,14 @@ const Player = (mark) => {
     return { getMark }
 };
 
+
 const gameBoard = (() => {
 
     let gameBoardArr = [['', '', ''], ['', '', ''], ['', '', '']];
 
     const setGameBoard = (x, y, mark) => {
-        if (gameBoardArr[x][y] == '' && !(gameController.isOver)) {
+        isOver = gameController.getResult();
+        if (gameBoardArr[x][y] == '' && !(isOver.gameOver)) {
             gameBoardArr[x][y] = mark;
         }
         gameController.checkWin();
@@ -33,7 +37,11 @@ const gameController = (() => {
     let gameBoardArr = gameBoard.getGameBoard();
     let numberOfTurns = 0;
     let playerWinner;
-    let isOver = (playerWinner == undefined || numberOfTurns != 9) ? false : true;
+    let isOver = {
+        isTie: numberOfTurns != 9,
+        gameOver: (playerWinner != undefined || numberOfTurns != 9)? false:true,
+        playerWinner: playerWinner
+    };
 
     const playerOne = Player('X');
     const playerTwo = Player('O');
@@ -60,10 +68,12 @@ const gameController = (() => {
             alternatePlayerTurns();
             if (playerOne.myTurn == true) {
                 playerWinner = "Player One";
-                isOver = true;
+                isOver.gameOver = true;
+
             } else {
                 playerWinner = "Player Two";
-                isOver = true;
+                isOver.gameOver = true;
+
             }
             console.log(playerWinner + "wins!");
 
@@ -72,6 +82,7 @@ const gameController = (() => {
 
         //check rows for win situations
         for (row = 0; row <= 2; row++) {
+            successiveCounter = 0;
             successiveCounterSign = gameBoardArr[row][0];
 
             for (col = 0; col <= 2; col++) {
@@ -82,7 +93,8 @@ const gameController = (() => {
                         winnerChecker();
                     } else if (numberOfTurns == 9) {
                         console.log("It's a tie!")
-                        isOver = true;
+                        isOver.gameOver = true;
+
                     }
                 } else {
 
@@ -95,8 +107,11 @@ const gameController = (() => {
             }
         }
 
+
         //check columns for win situations
         for (col = 0; col <= 2; col++) {
+        successiveCounter = 0;
+
             successiveCounterSign = gameBoardArr[0][col];
 
             for (row = 0; row <= 2; row++) {
@@ -182,6 +197,8 @@ const gameController = (() => {
 
 })();
 
+
+
 const displayController = (() => {
 
     let playerMark;
@@ -200,7 +217,7 @@ const displayController = (() => {
 
         isOverUpdate();
 
-        if(isOver){
+        if(isOver.gameOver){
             console.log("yawa!!!");
             removeEventListener();
             announceWinner();
