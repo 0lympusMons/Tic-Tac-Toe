@@ -24,7 +24,7 @@ const gameBoard = (() => {
     };
     const getGameBoard = () => gameBoardArr;
     const resetGameBoard = () => {
-        gameBoardArr = [['', '', ''], ['', '', ''], ['', '', '']]
+        gameBoardArr = [['', '', ''], ['', '', ''], ['', '', '']];
     };
 
     const displayGameBoardConsole = () => {
