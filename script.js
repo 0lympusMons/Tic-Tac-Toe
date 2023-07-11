@@ -263,6 +263,7 @@ const displayController = (() => {
     function announceWinner(){
         let tictactoeWrapper = document.querySelector(".tictactoe__wrapper");
         let winnerText = document.createElement("h2");
+        winnerText.classList.add("winner__text");
 
         if(isOver.isTie){
             resultString = "It's a tie!"
@@ -271,7 +272,13 @@ const displayController = (() => {
         }
 
         winnerText.innerText = resultString;
-        tictactoeWrapper.parentNode.insertBefore(winnerText, tictactoeWrapper)
+        tictactoeWrapper.parentNode.insertBefore(winnerText, tictactoeWrapper);
+        
+    }
+
+    function resetAnnounceWinner(){
+        let winnerText = document.querySelector(".winner__text");
+        winnerText.remove();
     }
 
     let resetButton = document.querySelector('#restart__button');
@@ -283,6 +290,7 @@ const displayController = (() => {
         updateDisplay();
         addEventListener();
         gameController.resetGame();
+        resetAnnounceWinner();
         //when restarting, gameController should restart too (successiveCounter, etc.)
     }
 
