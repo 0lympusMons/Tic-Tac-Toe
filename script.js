@@ -232,7 +232,8 @@ const displayController = (() => {
         gameBoard.setGameBoard(x, y, playerMark);
 
         //array to display
-        e.target.innerHTML = (gameBoard.getGameBoard())[x][y];
+        // e.target.innerHTML = (gameBoard.getGameBoard())[x][y];
+        updateDisplay();
 
     };
 
