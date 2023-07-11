@@ -274,6 +274,7 @@ const displayController = (() => {
         updateDisplay();
         addEventListener();
         
+        //when restarting, gameController should restart too (successiveCounter, etc.)
     }
 
     return { setMark }
