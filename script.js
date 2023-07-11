@@ -62,8 +62,6 @@ const gameController = (() => {
         let successiveCounter = 0;
         let successiveCounterSign;
 
-
-
         //check who won
         const winnerChecker = () => {
 
@@ -154,7 +152,6 @@ const gameController = (() => {
 
 
     //alternate player turns
-
     function alternatePlayerTurns() {
         if (playerOne.myTurn == true) {
             console.log("Player 2");
@@ -174,10 +171,21 @@ const gameController = (() => {
 
     };
 
-    //play game
+    //reset 
+    const resetGame = ()=>{
+        numberOfTurns = 0;
+        successiveCounter = 0;
+        successiveCounterSign = '';
+        playerWinner = undefined;
+        isOver.playerWinner = playerWinner;
+        isOver.gameOver = false;
+        playerOne.myTurn = true;
+        playerTwo.myTurn = false;
+        gameBoardArr = gameBoard.getGameBoard();
+    };
 
 
-    return { checkWin, alternatePlayerTurns, getResult };
+    return {checkWin, alternatePlayerTurns, getResult, resetGame};
 
 })();
 
@@ -270,10 +278,11 @@ const displayController = (() => {
     resetButton.addEventListener('click', resetGame);
 
     function resetGame(){
+        playerMark = undefined;
         gameBoard.resetGameBoard();
         updateDisplay();
         addEventListener();
-        
+        gameController.resetGame();
         //when restarting, gameController should restart too (successiveCounter, etc.)
     }
 
