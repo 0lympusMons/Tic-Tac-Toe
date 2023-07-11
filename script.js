@@ -23,7 +23,9 @@ const gameBoard = (() => {
         gameController.checkWin();
     };
     const getGameBoard = () => gameBoardArr;
-    const resetGameBoard = () => gameBoardArr = [['', '', ''], ['', '', ''], ['', '', '']];
+    const resetGameBoard = () => {
+        gameBoardArr = [['', '', ''], ['', '', ''], ['', '', '']]
+    };
 
     const displayGameBoardConsole = () => {
         console.table(gameBoardArr);
@@ -187,6 +189,20 @@ const displayController = (() => {
     let x, y;
     let isOver = gameController.getResult();
 
+    const updateDisplay = () => {
+        let gameBoardArr = gameBoard.getGameBoard();
+        let gridItems = document.querySelectorAll('.tictactoe__grid--item');
+        
+        let nodeCounter = 0;
+        for(row = 0; row <=2; row++){
+            for(col = 0; col<=2; col++){
+                gridItems[nodeCounter++].innerText = gameBoardArr[row][col];
+            }
+        }
+    };
+
+    updateDisplay();
+
     const addMark = (e) => {
 
         if (e.target.innerText == '') {
@@ -228,9 +244,12 @@ const displayController = (() => {
 
     //remove event listener if winner exists
     const removeEventListener = () => {
-        const gridItems = document.querySelectorAll(".tictactoe__grid--item");
         gridItems.forEach(gridItem => gridItem.removeEventListener('click', addMark));
     };
+
+    const addEventListener = () => {
+        gridItems.forEach(gridItem => gridItem.addEventListener('click', addMark));
+    }
 
     //display winner to html
     function announceWinner(){
@@ -247,7 +266,14 @@ const displayController = (() => {
         tictactoeWrapper.parentNode.insertBefore(winnerText, tictactoeWrapper)
     }
 
-    // let resetButton = 
+    let resetButton = document.querySelector('#restart__button');
+    resetButton.addEventListener('click', resetGame);
+
+    function resetGame(){
+        gameBoard.resetGameBoard();
+        addEventListener();
+        
+    }
 
     return { setMark }
 
