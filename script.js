@@ -271,6 +271,7 @@ const displayController = (() => {
 
     function resetGame(){
         gameBoard.resetGameBoard();
+        updateDisplay();
         addEventListener();
         
     }
