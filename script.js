@@ -215,11 +215,11 @@ const displayController = (() => {
 
         if (e.target.innerText == '') {
             gameController.alternatePlayerTurns();
+            addToGameBoardArr(e);
+            isOverUpdate();
         }
 
-        addToGameBoardArr(e);
 
-        isOverUpdate();
 
         if(isOver.gameOver){
             console.log("yawa!!!");
