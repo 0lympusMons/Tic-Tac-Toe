@@ -93,8 +93,11 @@ header h1 {
   font-family: var(--Belaosima);
   font-weight: var(--Belaosima--Bold);
   box-shadow: var(--shadow);
+  transition: .3s;
+
 }
 .button__wrapper button:hover {
+  transition: .3s;
   background-color: var(--dark-brown-color);
   color: var(--light-color);
 }
