@@ -41,7 +41,7 @@ const gameController = (() => {
     let playerWinner;
     let isOver = {
         isTie: (numberOfTurns == 9 && playerWinner == undefined),
-        gameOver: (playerWinner != undefined || numberOfTurns != 9)? false:true,
+        gameOver: (playerWinner != undefined || numberOfTurns != 9) ? false : true,
         playerWinner: playerWinner
     };
 
@@ -49,7 +49,7 @@ const gameController = (() => {
     const playerTwo = Player('O');
     playerOne.myTurn = true;
 
-    const getResult = ()=> {
+    const getResult = () => {
         return isOver;
     }
 
@@ -81,6 +81,16 @@ const gameController = (() => {
 
         };
 
+        //check diagonals for win situation
+        if (gameBoardArr[0][0] == gameBoardArr[1][1] && gameBoardArr[0][0] == gameBoardArr[2][2] && gameBoardArr[0][0] != '') {
+            successiveCounter = 3;
+            winnerChecker();
+        } else if (gameBoardArr[0][2] == gameBoardArr[1][1] && gameBoardArr[0][2] == gameBoardArr[2][0] && gameBoardArr[0][2] != '') {
+            successiveCounter = 3;
+            winnerChecker();
+
+        }
+
 
         //check rows for win situations
         for (row = 0; row <= 2; row++) {
@@ -96,7 +106,10 @@ const gameController = (() => {
                     } else if (numberOfTurns == 9) {
                         console.log("It's a tie!")
                         isOver.gameOver = true;
-                        isOver.isTie = true;
+
+                        if(playerWinner == undefined){
+                            isOver.isTie = true;
+                        }
 
                     }
                 } else {
@@ -113,7 +126,7 @@ const gameController = (() => {
 
         //check columns for win situations
         for (col = 0; col <= 2; col++) {
-        successiveCounter = 0;
+            successiveCounter = 0;
 
             successiveCounterSign = gameBoardArr[0][col];
 
@@ -126,7 +139,10 @@ const gameController = (() => {
                     } else if (numberOfTurns == 9) {
                         console.log("It's a tie!")
                         isOver.gameOver = true;
-                        isOver.isTie = true;
+                        
+                        if(playerWinner == undefined){
+                            isOver.isTie = true;
+                        }
                     }
                 } else {
                     successiveCounter = 0;
@@ -135,15 +151,7 @@ const gameController = (() => {
             }
         }
 
-        //check diagonals for win situation
-        if (gameBoardArr[0][0] == gameBoardArr[1][1] && gameBoardArr[0][0] == gameBoardArr[2][2] && gameBoardArr[0][0] != '') {
-            successiveCounter = 3;
-            winnerChecker();
-        } else if (gameBoardArr[0][2] == gameBoardArr[1][1] && gameBoardArr[0][2] == gameBoardArr[2][0] && gameBoardArr[0][2] != '') {
-            successiveCounter = 3;
-            winnerChecker();
 
-        }
 
 
 
@@ -172,7 +180,7 @@ const gameController = (() => {
     };
 
     //reset 
-    const resetGame = ()=>{
+    const resetGame = () => {
         numberOfTurns = 0;
         successiveCounter = 0;
         successiveCounterSign = '';
@@ -185,7 +193,7 @@ const gameController = (() => {
     };
 
 
-    return {checkWin, alternatePlayerTurns, getResult, resetGame};
+    return { checkWin, alternatePlayerTurns, getResult, resetGame };
 
 })();
 
@@ -200,10 +208,10 @@ const displayController = (() => {
     const updateDisplay = () => {
         let gameBoardArr = gameBoard.getGameBoard();
         let gridItems = document.querySelectorAll('.tictactoe__grid--item');
-        
+
         let nodeCounter = 0;
-        for(row = 0; row <=2; row++){
-            for(col = 0; col<=2; col++){
+        for (row = 0; row <= 2; row++) {
+            for (col = 0; col <= 2; col++) {
                 gridItems[nodeCounter++].innerText = gameBoardArr[row][col];
             }
         }
@@ -221,18 +229,18 @@ const displayController = (() => {
 
 
 
-        if(isOver.gameOver){
+        if (isOver.gameOver) {
             console.log("yawa!!!");
             removeEventListener();
             announceWinner();
         }
     };
 
-    function isOverUpdate(){
+    function isOverUpdate() {
         isOver = gameController.getResult();
     }
 
-    function addToGameBoardArr (e){
+    function addToGameBoardArr(e) {
         x = parseInt(e.target.dataset.x);
         y = parseInt(e.target.dataset.y);
         gameBoard.setGameBoard(x, y, playerMark);
@@ -258,22 +266,22 @@ const displayController = (() => {
     }
 
     //display winner to html
-    function announceWinner(){
+    function announceWinner() {
         let modalBackground = document.querySelector(".modal__bg");
         let winnerText = document.querySelector(".winner__text");
         modalBackground.style.display = "flex";
 
-        if(isOver.isTie){
+        if (isOver.isTie) {
             resultString = "It's a tie!"
-        }else{
+        } else {
             resultString = isOver.playerWinner + " wins!"
         }
 
         winnerText.innerText = resultString;
-        
+
     }
 
-    function resetAnnounceWinner(){
+    function resetAnnounceWinner() {
         let winnerText = document.querySelector(".winner__text");
         winnerText.innerText = '';
     }
@@ -284,7 +292,7 @@ const displayController = (() => {
     resetButtonMain.addEventListener('click', resetGame);
     resetButtonModal.addEventListener('click', resetGame);
 
-    function resetGame(){
+    function resetGame() {
 
         let modalBackground = document.querySelector(".modal__bg");
         modalBackground.style.display = "none";
