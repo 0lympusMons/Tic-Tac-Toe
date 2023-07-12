@@ -217,7 +217,7 @@ const displayController = (() => {
             gameController.alternatePlayerTurns();
         }
 
-        e.target.style.border = "red 1px solid";
+        // e.target.style.border = "red 1px solid";
 
         addToGameBoardArr(e);
 
