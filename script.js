@@ -295,6 +295,7 @@ const displayController = (() => {
         addEventListener();
         gameController.resetGame();
         resetAnnounceWinner();
+        isOver.isTie = false;
 
 
     }
