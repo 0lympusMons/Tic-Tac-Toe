@@ -65,6 +65,7 @@ header h1 {
 }
 .tictactoe__wrapper .tictactoe__grid--item {
   box-shadow: var(--shadow);
+  color: var(--dark-brown-color);
   background-color: var(--light-color);
   border-radius: 10px;
   display: flex;
@@ -74,6 +75,11 @@ header h1 {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+  transition: 0.3s;
+}
+.tictactoe__wrapper .tictactoe__grid--item:hover {
+  transition: 0.3s;
+  text-shadow: var(--shadow);
 }
 
 .button__wrapper button {
