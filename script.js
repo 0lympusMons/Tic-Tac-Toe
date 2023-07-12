@@ -259,9 +259,9 @@ const displayController = (() => {
 
     //display winner to html
     function announceWinner(){
-        let tictactoeWrapper = document.querySelector(".tictactoe__wrapper");
-        let winnerText = document.createElement("h2");
-        winnerText.classList.add("winner__text");
+        let modalBackground = document.querySelector(".modal__bg");
+        let winnerText = document.querySelector(".winner__text");
+        modalBackground.style.display = "flex";
 
         if(isOver.isTie){
             resultString = "It's a tie!"
@@ -270,26 +270,33 @@ const displayController = (() => {
         }
 
         winnerText.innerText = resultString;
-        tictactoeWrapper.parentNode.insertBefore(winnerText, tictactoeWrapper);
         
     }
 
     function resetAnnounceWinner(){
         let winnerText = document.querySelector(".winner__text");
-        winnerText.remove();
+        winnerText.innerText = '';
     }
 
-    let resetButton = document.querySelector('#restart__button');
-    resetButton.addEventListener('click', resetGame);
+    let resetButtonMain = document.querySelector('#restart__button--main');
+    let resetButtonModal = document.querySelector('#restart__button--modal');
+
+    resetButtonMain.addEventListener('click', resetGame);
+    resetButtonModal.addEventListener('click', resetGame);
 
     function resetGame(){
+
+        let modalBackground = document.querySelector(".modal__bg");
+        modalBackground.style.display = "none";
+
         playerMark = undefined;
         gameBoard.resetGameBoard();
         updateDisplay();
         addEventListener();
         gameController.resetGame();
         resetAnnounceWinner();
-        //when restarting, gameController should restart too (successiveCounter, etc.)
+
+
     }
 
     return { setMark }
